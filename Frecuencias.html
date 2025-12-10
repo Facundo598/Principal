@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Generador de frecuencias 10–45 kHz</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; max-width:90%; margin:24px auto; padding:16px; line-height:1.4; background: #333; color: white;}
+    h1 { font-size:1.4rem; margin-bottom:8px; }
+    .controls { display:grid; grid-template-columns: 1fr 1fr; gap:12px; align-items:center; }
+    .row { margin:10px 0; }
+    label { display:block; font-size:.9rem; margin-bottom:6px; }
+    input[type="range"] { width:100%; }
+    button { padding:8px 12px; border-radius:8px; border:1px solid #888; background:#f3f3f3; cursor:pointer; }
+    .presets { display:flex; gap:8px; flex-wrap:wrap; }
+    .status { margin-top:12px; padding:10px; border-radius:8px; background:#D67656; border:1px dashed #ddd; font-size:.95rem; }
+    .small { font-size:.85rem; color:#eee; }
+  </style>
+</head>
+<body>
+  <h1>Generador de frecuencias <span class="small">(10 kHz — 45 kHz)</span></h1>
+
+  <div class="row">
+    <label for="freqSlider">Frecuencia: <strong id="freqDisplay">20.00 kHz</strong></label>
+    <input id="freqSlider" type="range" min="10000" max="45000" step="10" value="20000" />
+  </div>
+
+  <div class="row presets">
+    <button data-freq="10000">10 kHz</button>
+    <button data-freq="12500">12.5 kHz</button>
+    <button data-freq="15000">15 kHz</button>
+    <button data-freq="20000">20 kHz</button>
+    <button data-freq="25000">25 kHz</button>
+    <button data-freq="30000">30 kHz</button>
+    <button data-freq="35000">35 kHz</button>
+    <button data-freq="40000">40 kHz</button>
+    <button data-freq="45000">45 kHz</button>
+  </div>
+
+  <div class="controls">
+    <div>
+      <div class="row">
+        <label>Volumen (ganancia)</label>
+        <input id="gainSlider" type="range" min="0" max="1" step="0.01" value="0.2" />
+      </div>
+      <div class="row">
+        <label>Forma de onda</label>
+        <select id="waveform">
+          <option value="sine">Seno (sine)</option>
+          <option value="square">Cuadrada (square)</option>
+          <option value="sawtooth">Diente de sierra (sawtooth)</option>
+          <option value="triangle">Triangular (triangle)</option>
+        </select>
+      </div>
+    </div>
+
+    <div>
+      <div class="row">
+        <button id="startBtn">Iniciar tono</button>
+        <button id="stopBtn" disabled>Detener</button>
+      </div>
+
+      <div class="row">
+        <label><input id="autoSweep" type="checkbox" /> Modo auto-barrer (sweep)</label>
+      </div>
+
+      <div class="row">
+        <label for="sweepSpeed">Velocidad sweep (Hz/s)</label>
+        <input id="sweepSpeed" type="range" min="10" max="5000" step="10" value="500" />
+        <div class="small">Velocidad actual: <span id="sweepSpeedDisplay">500</span> Hz/s</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row status" id="note">
+    <strong>Nota importante:</strong>
+    <div>
+      • La mayoría de los altavoces no reproducen más de ~20 kHz, así que podrías no escuchar nada aunque esté funcionando.<br>
+      • Úsalo con responsabilidad si hay animales cerca; evita exposiciones prolongadas.<br>
+      • Este generador es solo para pruebas/educación.<br>
+      • Las frecuencias comprendidas entre 25 kHz y 45 kHz suelen utilizarse como rango ultrasónico destinado a ahuyentar perros, ya que son sonidos normalmente inaudibles para las personas pero perceptibles y molestos para ellos.
+    </div>
+  </div>
+
+  <script>
+  let audioCtx = null;
+  let osc = null;
+  let gainNode = null;
+  let sweepTimer = null;
+  let sweepDirection = 1;
+
+  const freqSlider = document.getElementById('freqSlider');
+  const freqDisplay = document.getElementById('freqDisplay');
+  const gainSlider = document.getElementById('gainSlider');
+  const waveform = document.getElementById('waveform');
+  const startBtn = document.getElementById('startBtn');
+  const stopBtn = document.getElementById('stopBtn');
+  const autoSweep = document.getElementById('autoSweep');
+  const sweepSpeed = document.getElementById('sweepSpeed');
+  const sweepSpeedDisplay = document.getElementById('sweepSpeedDisplay');
+
+  function formatKHz(f) { return (f/1000).toFixed(2) + " kHz"; }
+
+  freqDisplay.textContent = formatKHz(Number(freqSlider.value));
+  sweepSpeedDisplay.textContent = sweepSpeed.value;
+
+  freqSlider.addEventListener("input", () => {
+    const f = Number(freqSlider.value);
+    freqDisplay.textContent = formatKHz(f);
+    if (osc) osc.frequency.setValueAtTime(f, audioCtx.currentTime);
+  });
+
+  document.querySelectorAll(".presets button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const f = Number(btn.dataset.freq);
+      freqSlider.value = String(f);
+      freqDisplay.textContent = formatKHz(f);
+      if (osc) osc.frequency.setValueAtTime(f, audioCtx.currentTime);
+    });
+  });
+
+  gainSlider.addEventListener("input", () => {
+    if (gainNode) gainNode.gain.setValueAtTime(Number(gainSlider.value), audioCtx.currentTime);
+  });
+
+  waveform.addEventListener("change", () => {
+    if (osc) osc.type = waveform.value;
+  });
+
+  startBtn.addEventListener("click", async () => {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    osc = audioCtx.createOscillator();
+    gainNode = audioCtx.createGain();
+
+    osc.type = waveform.value;
+    osc.frequency.setValueAtTime(Number(freqSlider.value), audioCtx.currentTime);
+    gainNode.gain.setValueAtTime(Number(gainSlider.value), audioCtx.currentTime);
+
+    osc.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    osc.start();
+
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
+
+    if (autoSweep.checked) startSweep();
+  });
+
+  stopBtn.addEventListener("click", stopTone);
+
+  function stopTone() {
+    stopSweep();
+
+    if (osc) {
+      try { osc.stop(); } catch {}
+      try { osc.disconnect(); } catch {}
+      osc = null;
+    }
+    if (gainNode) {
+      try { gainNode.disconnect(); } catch {}
+      gainNode = null;
+    }
+
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+  }
+
+  autoSweep.addEventListener("change", () => {
+    if (autoSweep.checked) {
+      if (!osc) startBtn.click();
+      else startSweep();
+    } else {
+      stopSweep();
+    }
+  });
+
+  sweepSpeed.addEventListener("input", () => {
+    sweepSpeedDisplay.textContent = sweepSpeed.value;
+    if (sweepTimer) {
+      stopSweep();
+      startSweep();
+    }
+  });
+
+  function startSweep() {
+    if (!audioCtx || !osc) return;
+
+    stopSweep();
+
+    const tickMs = 40;
+    const hzPerSec = Number(sweepSpeed.value);
+    const hzPerTick = (hzPerSec * tickMs) / 1000;
+
+    sweepTimer = setInterval(() => {
+      let current = osc.frequency.value;
+      let next = current + sweepDirection * hzPerTick;
+
+      const minF = Number(freqSlider.min);
+      const maxF = Number(freqSlider.max);
+
+      if (next > maxF) { next = maxF; sweepDirection = -1; }
+      else if (next < minF) { next = minF; sweepDirection = 1; }
+
+      freqSlider.value = String(Math.round(next));
+      freqDisplay.textContent = formatKHz(next);
+      osc.frequency.setValueAtTime(next, audioCtx.currentTime);
+    }, tickMs);
+  }
+
+  function stopSweep() {
+    if (sweepTimer) { clearInterval(sweepTimer); sweepTimer = null; }
+  }
+
+  window.addEventListener("pagehide", () => {
+    stopTone();
+    if (audioCtx && audioCtx.state !== "closed") {
+      try { audioCtx.close(); } catch {}
+      audioCtx = null;
+    }
+  });
+  </script>
+
+</body>
+</html>
