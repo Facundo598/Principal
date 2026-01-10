@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro de Presión Arterial</title>
+
+<style>
+:root {
+  --bg: #f7f9fc;
+  --card: #ffffff;
+  --border: #e0e6ed;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --accent: #2563eb;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.container {
+  max-width: 1200px;
+  padding: 16px;
+  margin: auto;
+}
+
+h1 {
+  margin-bottom: 4px;
+  font-size: 1.5rem;
+}
+
+.subtitle {
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.05);
+  overflow: hidden;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+thead th {
+  position: sticky;
+  top: 0;
+  background: #f1f5f9;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+thead th span {
+  margin-left: 6px;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+
+tbody tr:hover {
+  background: #f9fafb;
+}
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.sys { background: #e0f2fe; color: #0369a1; }
+.dia { background: #ede9fe; color: #5b21b6; }
+.pulse { background: #fee2e2; color: #991b1b; }
+
+.footer {
+  padding: 10px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-align: right;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>Registro de Presión Arterial</h1>
+  <div class="subtitle">Datos obtenidos desde Google Sheets</div>
+
+  <div class="card">
+    <div class="table-wrapper">
+      <table id="tabla">
+        <thead></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="footer" id="estado">Cargando datos…</div>
+  </div>
+</div>
+
+<script>
+const url = "https://docs.google.com/spreadsheets/d/1rrzaQvKH93qu4w2cVfNvumUcpuMomBgWBh6jXkzvEVo/gviz/tq?tqx=out:csv&gid=238346017";
+
+let data = [];
+let sortState = {};
+
+fetch(url)
+  .then(r => r.text())
+  .then(csv => {
+    const rows = csv.trim().split("\n").map(r =>
+      r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)
+        .map(c => c.replace(/^"|"$/g, ""))
+    );
+
+    data = rows.slice(1);
+    renderTable(rows[0], data);
+
+    document.getElementById("estado").textContent = "Datos cargados ✅";
+  })
+  .catch(e => {
+    document.getElementById("estado").textContent = "Error al cargar datos ❌";
+    console.error(e);
+  });
+
+function renderTable(headers, rows) {
+  const thead = document.querySelector("thead");
+  const tbody = document.querySelector("tbody");
+
+  thead.innerHTML = "";
+  tbody.innerHTML = "";
+
+  const tr = document.createElement("tr");
+  headers.forEach((h, i) => {
+    const th = document.createElement("th");
+    th.innerHTML = `${h}<span>⇅</span>`;
+    th.onclick = () => sortBy(i, headers);
+    tr.appendChild(th);
+  });
+  thead.appendChild(tr);
+
+  rows.forEach(r => {
+    const tr = document.createElement("tr");
+    r.forEach((c, i) => {
+      const td = document.createElement("td");
+
+      if (i === 2) td.innerHTML = `<span class="badge sys">${c}</span>`;
+      else if (i === 3) td.innerHTML = `<span class="badge dia">${c}</span>`;
+      else if (i === 4) td.innerHTML = `<span class="badge pulse">${c}</span>`;
+      else td.textContent = c;
+
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+}
+
+function sortBy(index, headers) {
+  const asc = sortState[index] = !sortState[index];
+
+  data.sort((a, b) => {
+    const x = isNaN(a[index]) ? a[index] : Number(a[index]);
+    const y = isNaN(b[index]) ? b[index] : Number(b[index]);
+    return asc ? x > y ? 1 : -1 : x < y ? 1 : -1;
+  });
+
+  renderTable(headers, data);
+}
+</script>
+
+</body>
+</html>
