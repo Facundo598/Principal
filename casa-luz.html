@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luminaria Antebaño</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1e1e2f, #2c2c54);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .estado {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 30px;
+      font-size: 1.2rem;
+    }
+
+    .circulo {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: gray;
+      transition: 0.3s;
+    }
+
+    .on-circle {
+      background: #00e676;
+      box-shadow: 0 0 10px #00e676;
+    }
+
+    .off-circle {
+      background: #ff1744;
+      box-shadow: 0 0 10px #ff1744;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    button {
+      padding: 20px;
+      font-size: 1.3rem;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: 0.2s;
+      width: 100%;
+    }
+
+    .on {
+      background-color: #00c853;
+    }
+
+    .on:hover {
+      background-color: #00e676;
+      transform: scale(1.05);
+    }
+
+    .off {
+      background-color: #d50000;
+    }
+
+    .off:hover {
+      background-color: #ff1744;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Luminaria Antebaño</h1>
+
+  <div class="estado">
+    <div id="circulo" class="circulo"></div>
+    <span id="textoEstado">Estado: ...</span>
+  </div>
+
+  <div class="container">
+    <button class="on" onclick="encender()">Encender</button>
+    <button class="off" onclick="apagar()">Apagar</button>
+  </div>
+
+  <script>
+    const url = "https://sensor-distancia-20ba1-default-rtdb.firebaseio.com/esp2/led.json";
+
+    function encender() {
+      fetch(url, {
+        method: "PUT",
+        body: JSON.stringify(1)
+      });
+    }
+
+    function apagar() {
+      fetch(url, {
+        method: "PUT",
+        body: JSON.stringify(0)
+      });
+    }
+
+    function actualizarEstado(valor) {
+      const texto = document.getElementById("textoEstado");
+      const circulo = document.getElementById("circulo");
+
+      if (valor === 1) {
+        texto.innerText = "Estado: ENCENDIDO 💡";
+        circulo.classList.add("on-circle");
+        circulo.classList.remove("off-circle");
+      } else {
+        texto.innerText = "Estado: APAGADO 🌑";
+        circulo.classList.add("off-circle");
+        circulo.classList.remove("on-circle");
+      }
+    }
+
+    function leerEstado() {
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          actualizarEstado(data);
+        });
+    }
+
+    // Actualiza cada 1 segundo
+    setInterval(leerEstado, 1000);
+
+    // Primera carga inmediata
+    leerEstado();
+  </script>
+
+</body>
+</html>
