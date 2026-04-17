@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>ESP8266 + Firebase Tutorial</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+    h1, h2, h3 {
+      color: #38bdf8;
+    }
+    code, pre {
+      background: #1e293b;
+      padding: 10px;
+      display: block;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+    .box {
+      background: #1e293b;
+      padding: 15px;
+      border-left: 4px solid #38bdf8;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+<h1>📡 ESP8266 + Firebase + GitHub Pages</h1>
+
+<p>Sistema para controlar o visualizar datos en tiempo real usando ESP8266, Firebase y una página web.</p>
+
+<h2>🔄 Flujo del sistema</h2>
+<pre>ESP8266 → Firebase Realtime Database (HTTPS) → Página Web</pre>
+
+<div class="box">
+El ESP envía o lee datos desde Firebase, y la web los consume en tiempo real.
+</div>
+
+<h2>🔥 PARTE 1 — Crear proyecto en Firebase</h2>
+<ol>
+  <li>Ir a Firebase Console</li>
+  <li>Click en <b>Crear proyecto</b></li>
+  <li>Asignar nombre</li>
+  <li>Desactivar Analytics (opcional)</li>
+</ol>
+
+<p><i>📸 Agregar imagen aquí</i></p>
+
+<h2>🔥 PARTE 2 — Crear Realtime Database</h2>
+<ol>
+  <li>Ir a <b>Build → Realtime Database</b></li>
+  <li>Click en <b>Crear base de datos</b></li>
+  <li>Elegir región</li>
+  <li>Seleccionar modo prueba o bloqueado</li>
+</ol>
+
+<p><i>📸 Agregar imagen aquí</i></p>
+
+<h2>🔥 PARTE 3 — Obtener la URL</h2>
+
+<p>Ejemplo de URL:</p>
+
+<pre>https://sensor-distancia-default-rtdb.firebaseio.com/</pre>
+
+<p><i>📸 Agregar imagen aquí</i></p>
+
+<h2>🔐 Reglas de seguridad</h2>
+
+<pre>{
+  "rules": {
+    ".read": true,
+    ".write": true
+  }
+}</pre>
+
+<div class="box">
+⚠️ Modo prueba: solo usar para desarrollo.
+</div>
+
+<h2>🔧 Comunicación ESP8266 ↔ Firebase</h2>
+
+<h3>🔹 Opción 1: WiFiClientSecure.h</h3>
+<ul>
+  <li>Armar peticiones HTTP manualmente</li>
+  <li>Manejar HTTPS</li>
+  <li>Formatear JSON</li>
+  <li>Manejar errores</li>
+</ul>
+
+<h3>🔹 Opción 2: Librería Firebase ESP Client (RECOMENDADO)</h3>
+<ul>
+  <li>✔️ Conexión automática</li>
+  <li>✔️ Autenticación</li>
+  <li>✔️ Funciones listas</li>
+  <li>✔️ Reconexión</li>
+</ul>
+
+<div class="box">
+✔️ No es obligatorio usar la librería, pero es la opción más simple y estable.
+</div>
+
+<h2>🚀 Próximos pasos</h2>
+<ul>
+  <li>Código ESP8266</li>
+  <li>Página web con Firebase</li>
+  <li>Control en tiempo real</li>
+</ul>
+
+</body>
+</html>
