@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía básica de antenas TDA</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: #0f172a;
+        color: #e2e8f0;
+        line-height: 1.6;
+    	font-size: 20px;
+    }
+
+    .container {
+        max-width: 90%;
+        margin: auto;
+        padding: 20px;
+    }
+
+    h1, h2 {
+        color: #38bdf8;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .card {
+        background: #1e293b;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    ul {
+        padding-left: 20px;
+    }
+
+    li {
+        margin-bottom: 8px;
+    }
+
+    .highlight {
+        color: #22c55e;
+        font-weight: bold;
+    }
+
+    .formula {
+        background: #020617;
+        padding: 10px;
+        border-radius: 8px;
+        font-family: monospace;
+        text-align: center;
+        margin: 10px 0;
+    	font-size: 30px;
+    }
+
+    img {
+        width: 100%;
+        border-radius: 10px;
+        margin-top: 10px;
+    }
+
+    @media (max-width: 600px) {
+        body {
+            font-size: 14px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>📡 Guía básica de antenas TDA</h1>
+
+<div class="card">
+<h2>📡 La clave: longitud de onda</h2>
+
+<div class="formula">λ = c / f</div>
+
+<ul>
+<li><b>c</b>: velocidad de la luz</li>
+<li><b>f</b>: frecuencia</li>
+<li><b>λ</b>: longitud de onda</li>
+</ul>
+
+<p>
+Las antenas están optimizadas para distintas frecuencias.  
+La TV digital terrestre (TDA) usa banda UHF.
+</p>
+
+<p class="highlight">
+En TDA (470–700 MHz), λ ≈ 64 cm a 43 cm
+</p>
+
+<ul>
+<li>Todos los canales están dentro de ese rango</li>
+<li>La longitud de onda varía según la frecuencia</li>
+<li>Cada canal tiene una λ ligeramente distinta</li>
+</ul>
+
+<p>
+👉 Por eso la antena se diseña para un valor promedio.
+</p>
+
+<p class="highlight">
+Tu antena debe adaptarse a longitudes entre 43 y 64 cm
+</p>
+</div>
+
+<div class="card">
+<h2>🎯 Media onda (λ/2)</h2>
+
+<div class="formula">L = λ / 2</div>
+
+<ul>
+<li>Se forma un patrón estable de corriente</li>
+<li>La antena entra en resonancia</li>
+<li>Máxima transferencia de energía</li>
+</ul>
+
+<ul>
+<li>Impedancia ≈ 73 Ω</li>
+<li>Muy cercana a 75 Ω del coaxial</li>
+<li>Pocas pérdidas</li>
+</ul>
+
+<p class="highlight">
+Resultado: excelente recepción sin complicaciones
+</p>
+</div>
+
+<div class="card">
+<h2>🎯 Cuarto de onda (λ/4)</h2>
+
+<div class="formula">L = λ / 4</div>
+
+<ul>
+<li>Es media antena</li>
+<li>Necesita referencia de masa (malla o plano metálico)</li>
+<li>Se comporta como un dipolo completo</li>
+</ul>
+
+<ul>
+<li>Compacta</li>
+<li>Fácil de construir</li>
+<li>Muy usada con cable coaxial</li>
+</ul>
+
+<p class="highlight">
+Resultado: casi tan eficiente como λ/2 pero más simple
+</p>
+</div>
+
+<div class="card">
+<h2>🧠 Idea general</h2>
+
+<ul>
+<li>Las antenas dependen de la frecuencia</li>
+<li>Los canales trabajan dentro de un rango</li>
+<li>No hay una medida única exacta</li>
+<li>Se diseña siempre para un promedio</li>
+</ul>
+
+<p class="highlight">
+La longitud de onda define el tamaño de la antena
+</p>
+</div>
+
+<!-- IMÁGENES -->
+<img src="antena1.jpg" alt="Antena ejemplo 1"><br>
+<img src="antena2.jpg" alt="Antena ejemplo 2">
+
+
+</div>
+
+</body>
+</html>
