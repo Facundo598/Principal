@@ -105,9 +105,11 @@
   <li class="desc">Ctrl + C (Interrumpir / Matar)</li>
   <li class="desc">Ctrl + Z (Suspender / Pausar)</li>
   <li class="desc">ls: listar o ver los archivos</li>
-  <li class="desc">ls: listar o ver los archivos</li>
+  <li class="desc">cd carpeta: “change directory” moverse entre carpetas</li>
+  <li class="desc">cd ..: Sube un nivel (a la carpeta padre)</li>
 </div>
-  
+
+<div id="pagina1">
 <div class="step">
   <h2>1. Instalar Aircrack</h2>
   <div class="code-box">
@@ -198,6 +200,82 @@
   <h2>11. Repetir</h2>
   <p class="desc">Volver al paso 2 si no hay handshake.</p>
 </div>
+
+ <button onclick="cambiarPagina()">Siguiente</button>
+</div>
+
+<div id="pagina2" style="display:none;">
+<div class="step">
+  <h2>1. Actualizar la base de paquetes</h2>
+  <div class="code-box">
+    <button class="copy-btn" onclick="copy(this)">Copiar</button>
+    <code>sudo apt update</code>
+  </div>
+</div>
+
+<div class="step">
+  <h2>2. Instala HCXTOOLS y verificar la instalación</h2>
+  <div class="code-box">
+    <button class="copy-btn" onclick="copy(this)">Copiar</button>
+    <code>sudo apt install hcxtools</code>
+  </div>
+  <div class="code-box">
+    <button class="copy-btn" onclick="copy(this)">Copiar</button>
+    <code>which hcxpcapngtool</code>
+  </div>
+</div>
+
+<div class="step">
+  <h2>3. Conversión .CAP a .HC22000</h2>
+  <p class="desc">Dirigirse a la ubicación donde se encuentre el archivo “.cap”
+    .Se extrae del .cap solo el material criptográfico mínimo para trabajar de 
+    forma más eficiente.</p>
+  <li class="desc">Elimina ruido: descarta paquetes Wi-Fi que no sirven.</li>
+  <li class="desc">Archivo más chico: solo queda lo necesario para verificar contraseñas.</li>
+  <li class="desc">Más rápido: Hashcat trabaja directo, sin analizar paquetes.</li>
+  <li class="desc">Mejor compatibilidad: formato nativo (22000) para CPU/GPU.</li>
+  <div class="code-box">
+    <button class="copy-btn" onclick="copy(this)">Copiar</button>
+    <code>hcxpcapngtool -o ingrese_nombre.hc22000 nombre_archivo.cap</code>
+  </div>
+  <img src="32kali.jpg" alt="Imagen32">
+</div>  
+
+<div class="step">
+  <h2>4. Ataque de Diccionario (Fuerza Bruta con Lista de Palabras)</h2>
+  <p class="desc">Es el método más común. Necesitas un archivo de texto con posibles 
+    contraseñas (wordlist).</p>
+  <div class="code-box">
+    <button class="copy-btn" onclick="copy(this)">Copiar</button>
+    <code>hashcat -m 22000 archivo_del_hash.hc22000 /ruta/al/diccionario.txt</code>
+  </div>
+  <img src="42kali.jpg" alt="Imagen42">
+</div>    
+
+<div class="step">
+  <h2>5. Ataque de Máscara (Fuerza Bruta Pura)</h2>
+  <p class="desc">Si no tienes un diccionario y quieres probar combinaciones específicas 
+    (por ejemplo, si sabes que la clave tiene 8 números)</p>
+  <div class="code-box">
+    <button class="copy-btn" onclick="copy(this)">Copiar</button>
+    <code>hashcat -m 22000 archivo_del_hash.hc22000 -a 3 ?d?d?d?d?d?d?d?d</code>
+  </div>
+</div>  
+
+  <button onclick="volver()">Volver</button>
+</div>
+
+<script>
+function cambiarPagina() {
+  document.getElementById("pagina1").style.display = "none";
+  document.getElementById("pagina2").style.display = "block";
+}
+
+function volver() {
+  document.getElementById("pagina1").style.display = "block";
+  document.getElementById("pagina2").style.display = "none";
+}
+</script>
 
 </div>
 
