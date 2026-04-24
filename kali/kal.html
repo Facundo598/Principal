@@ -109,7 +109,7 @@
 </div>
   
 <div class="step">
-  <h2>0. Instalar Aircrack</h2>
+  <h2>1. Instalar Aircrack</h2>
   <div class="code-box">
     <button class="copy-btn" onclick="copy(this)">Copiar</button>
     <code>sudo apt-get install aircrack-ng</code>
@@ -117,7 +117,7 @@
 </div>
   
 <div class="step">
-  <h2>1. Activar modo monitor</h2>
+  <h2>2. Activar modo monitor</h2>
   <p class="desc">Habilita la interfaz en modo monitor.</p>
   <div class="code-box">
     <button class="copy-btn" onclick="copy(this)">Copiar</button>
@@ -126,7 +126,7 @@
 </div>
 
 <div class="step">
-  <h2>2. Liberar procesos</h2>
+  <h2>3. Liberar procesos</h2>
   <p class="desc">Evita conflictos con la tarjeta.</p>
   <div class="code-box">
     <button class="copy-btn" onclick="copy(this)">Copiar</button>
@@ -135,7 +135,7 @@
 </div>
 
 <div class="step">
-  <h2>3. Escanear redes</h2>
+  <h2>4. Escanear redes</h2>
   <div class="code-box">
     <button class="copy-btn" onclick="copy(this)">Copiar</button>
     <code>sudo airodump-ng wlan0</code>
@@ -144,7 +144,7 @@
 </div>
 
 <div class="step">
-  <h2>4. Guardar captura</h2>
+  <h2>5. Guardar captura</h2>
   <div class="code-box">
     <button class="copy-btn" onclick="copy(this)">Copiar</button>
     <code>sudo airodump-ng wlan0 -w captura</code>
@@ -152,7 +152,7 @@
 </div>
 
 <div class="step">
-  <h2>5. Filtrar red</h2>
+  <h2>6. Filtrar red</h2>
   <div class="code-box">
     <button class="copy-btn" onclick="copy(this)">Copiar</button>
     <code>sudo airodump-ng -c 6 --bssid XX:XX:XX:XX:XX:XX -w captura wlan0</code>
@@ -161,7 +161,7 @@
 </div>
 
 <div class="step">
-  <h2>6. Forzar handshake</h2>
+  <h2>7. Forzar handshake</h2>
   <p class="desc">Abrir otra terminal.</p>
   <div class="code-box">
     <button class="copy-btn" onclick="copy(this)">Copiar</button>
@@ -172,7 +172,7 @@
 </div>
 
 <div class="step">
-  <h2>7. Verificar handshake</h2>
+  <h2>8. Verificar handshake</h2>
   <div class="code-box">
     <button class="copy-btn" onclick="copy(this)">Copiar</button>
     <code>aircrack-ng captura-02.cap</code>
@@ -180,7 +180,7 @@
 </div>
 
 <div class="step">
-  <h2>8. Diccionario</h2>
+  <h2>9. Diccionario</h2>
   <div class="code-box">
     <button class="copy-btn" onclick="copy(this)">Copiar</button>
     <code>sudo aircrack-ng -w /ruta/rockyou.txt -b [MAC_AP] captura-02.cap</code>
@@ -188,7 +188,7 @@
 </div>
 
 <div class="step">
-  <h2>9. Repetir</h2>
+  <h2>10. Repetir</h2>
   <p class="desc">Volver al paso 2 si no hay handshake.</p>
 </div>
 
