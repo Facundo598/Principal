@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registro Diario</title>
+
+  <style>
+
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
+
+    body{
+      font-family: Arial, sans-serif;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background: linear-gradient(135deg,#0f172a,#1e293b);
+      padding:20px;
+      color:white;
+    }
+
+    .card{
+      width:100%;
+      max-width:550px;
+      background:rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:24px;
+      padding:30px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    h1{
+      text-align:center;
+      margin-bottom:30px;
+      font-size:32px;
+    }
+
+    .grupo{
+      display:flex;
+      flex-direction:column;
+      margin-bottom:20px;
+    }
+
+    label{
+      margin-bottom:8px;
+      font-size:14px;
+      opacity:0.9;
+    }
+
+    input,
+    textarea,
+    select{
+      width:100%;
+      border:none;
+      outline:none;
+      padding:14px;
+      border-radius:14px;
+      background:rgba(255,255,255,0.12);
+      color:white;
+      font-size:16px;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus{
+      background:rgba(255,255,255,0.18);
+    }
+
+    textarea{
+      min-height:130px;
+      resize:vertical;
+    }
+
+    /* 🔥 FIX IMPORTANTE PARA EL DROPDOWN */
+    select option{
+      background-color:#1e293b;
+      color:white;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator{
+      filter:invert(1);
+      cursor:pointer;
+    }
+
+    .boton{
+      width:100%;
+      padding:16px;
+      border:none;
+      border-radius:16px;
+      font-size:16px;
+      font-weight:bold;
+      cursor:pointer;
+      background:linear-gradient(135deg,#3b82f6,#2563eb);
+      color:white;
+    }
+
+    #mensaje{
+      margin-top:20px;
+      text-align:center;
+      font-weight:bold;
+    }
+
+    @media(max-width:600px){
+      .card{
+        padding:22px;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+
+    <h1>Registro Diario</h1>
+
+    <form id="formulario">
+
+      <div class="grupo">
+        <label>Fecha</label>
+        <input type="date" id="fecha" required>
+      </div>
+
+      <div class="grupo">
+        <label>Nota</label>
+        <textarea id="nota" required></textarea>
+      </div>
+
+      <div class="grupo">
+        <label>Motivo</label>
+        <select id="motivo" required>
+          <option value="">Seleccionar</option>
+          <option value="Horas extras">Horas extras</option>
+          <option value="Trabajo normal">Trabajo normal</option>
+          <option value="Capacitación">Capacitación</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+
+      <button class="boton" type="submit">Guardar Registro</button>
+
+      <p id="mensaje"></p>
+
+    </form>
+
+  </div>
+
+  <script>
+
+    const url = "https://script.google.com/macros/s/AKfycbwi75Xf4YHeHGY7y3mJU22J2lWXGO-koOw-UV1vILKU8CoF62yG8FzDyg2pdofM_3Jd1g/exec";
+    document.getElementById("fecha").valueAsDate = new Date();
+
+    document.getElementById("formulario").addEventListener("submit", async (e) => {
+
+      e.preventDefault();
+
+      const datos = {
+        fecha: document.getElementById("fecha").value,
+        nota: document.getElementById("nota").value,
+        motivo: document.getElementById("motivo").value
+      };
+
+      const mensaje = document.getElementById("mensaje");
+      mensaje.innerText = "Enviando...";
+
+      try{
+
+        await fetch(url,{
+          method:"POST",
+          body:JSON.stringify(datos)
+        });
+
+        mensaje.innerText = "Registro guardado ✔";
+
+        document.getElementById("formulario").reset();
+        document.getElementById("fecha").valueAsDate = new Date();
+
+      }catch(err){
+
+        mensaje.innerText = "Error al enviar";
+
+      }
+
+    });
+
+  </script>
+
+</body>
+</html>
