@@ -22,6 +22,8 @@ app.post("/guardar", async (req, res) => {
 
         const texto = await respuesta.text();
 
+        
+        console.log("Datos enviados:", req.body);
         console.log("Respuesta Google:", texto);
 
         res.json({
