@@ -6,7 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const GOOGLE_SCRIPT_URL = "PEGAR_URL_APPS_SCRIPT";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwi75Xf4YHeHGY7y3mJU22J2lWXGO-koOw-UV1vILKU8CoF62yG8FzDyg2pdofM_3Jd1g/exec";
 
 app.post("/guardar", async (req, res) => {
 
