@@ -12,19 +12,13 @@ app.post("/guardar", async (req, res) => {
 
     try {
 
-        const respuesta = await fetch(GOOGLE_SCRIPT_URL, {
+        await fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(req.body)
         });
-
-        const texto = await respuesta.text();
-
-        
-        console.log("Datos enviados:", req.body);
-        console.log("Respuesta Google:", texto);
 
         res.json({
             ok: true,
@@ -47,5 +41,5 @@ app.post("/guardar", async (req, res) => {
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-    console.log("Servidor iniciado en puerto " + PORT);
+    console.log("Servidor iniciado");
 });
