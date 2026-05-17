@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resumen del Proyecto Registro Diario</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    color:white;
+    padding:30px;
+    line-height:1.7;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+}
+
+.card{
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.1);
+    backdrop-filter:blur(10px);
+    border-radius:24px;
+    padding:30px;
+    margin-bottom:25px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:40px;
+    font-size:38px;
+}
+
+h2{
+    margin-bottom:15px;
+    color:#60a5fa;
+}
+
+p{
+    margin-bottom:15px;
+}
+
+pre{
+    background:#020617;
+    padding:18px;
+    border-radius:14px;
+    overflow-x:auto;
+    margin-top:15px;
+    color:#93c5fd;
+}
+
+ul{
+    padding-left:20px;
+}
+
+li{
+    margin-bottom:10px;
+}
+
+a{
+    color:#93c5fd;
+    text-decoration:none;
+}
+
+a:hover{
+    text-decoration:underline;
+}
+
+.boton{
+    display:inline-block;
+    margin-top:20px;
+    padding:14px 20px;
+    background:linear-gradient(135deg,#3b82f6,#2563eb);
+    border-radius:14px;
+    color:white;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Resumen Proyecto Registro Diario</h1>
+
+<div class="card">
+<h2>Objetivo</h2>
+
+<p>
+Crear una página web para registrar:
+</p>
+
+<ul>
+<li>Fecha</li>
+<li>Nota</li>
+<li>Motivo</li>
+</ul>
+
+<p>
+y guardar automáticamente esos datos en Google Sheets.
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>Problema Inicial</h2>
+
+<p>
+El formulario funcionaba correctamente enviando datos directo a Google Apps Script.
+</p>
+
+<pre>
+RegLab.html
+↓
+Google Apps Script
+↓
+Google Sheets
+</pre>
+
+<p>
+Pero en la red corporativa el acceso a Google Apps Script estaba bloqueado.
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>Solución Implementada</h2>
+
+<p>
+Se agregó un backend intermedio usando Render.
+</p>
+
+<pre>
+RegLab.html
+↓
+Render Backend
+↓
+Google Apps Script
+↓
+Google Sheets
+</pre>
+
+<p>
+Ahora la PC solo se conecta a Render y Render se comunica con Google desde la nube.
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>Archivos Importantes</h2>
+
+<h3>RegLab.html</h3>
+
+<p>
+Frontend principal del proyecto.
+</p>
+
+<ul>
+<li>Diseño visual</li>
+<li>Formulario</li>
+<li>JavaScript</li>
+<li>fetch()</li>
+</ul>
+
+<p>
+Publicado mediante GitHub Pages.
+</p>
+
+<hr style="margin:25px 0;border-color:rgba(255,255,255,0.1);">
+
+<h3>package.json</h3>
+
+<p>
+Archivo de configuración Node.js.
+</p>
+
+<p>
+Render lo usa para:
+</p>
+
+<ul>
+<li>instalar dependencias</li>
+<li>ejecutar el backend</li>
+</ul>
+
+<hr style="margin:25px 0;border-color:rgba(255,255,255,0.1);">
+
+<h3>server.js</h3>
+
+<p>
+Backend Node.js ejecutado por Render.
+</p>
+
+<p>
+Funciones:
+</p>
+
+<ul>
+<li>recibir datos del formulario</li>
+<li>reenviar datos a Google Apps Script</li>
+<li>devolver respuesta OK</li>
+</ul>
+
+</div>
+
+<div class="card">
+
+<h2>Endpoint Render</h2>
+
+<p>
+URL del backend:
+</p>
+
+<pre>
+https://principal-cnw4.onrender.com/guardar
+</pre>
+
+<p>
+Esta URL fue creada automáticamente por Render al desplegar el Web Service.
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>Flujo Final</h2>
+
+<pre>
+Usuario completa formulario
+↓
+RegLab.html
+↓
+fetch()
+↓
+Render (/guardar)
+↓
+server.js
+↓
+Google Apps Script
+↓
+appendRow()
+↓
+Google Sheets
+</pre>
+
+</div>
+
+<div class="card">
+
+<h2>Problema Técnico Encontrado</h2>
+
+<p>
+Render recibía un objeto vacío:
+</p>
+
+<pre>
+{}
+</pre>
+
+<p>
+La causa fue que el HTML no enviaba:
+</p>
+
+<pre>
+Content-Type: application/json
+</pre>
+
+<p>
+La solución fue agregar:
+</p>
+
+<pre>
+headers:{
+  "Content-Type":"application/json"
+}
+</pre>
+
+</div>
+
+<div class="card">
+
+<h2>Resultado Final</h2>
+
+<ul>
+<li>Frontend funcionando</li>
+<li>Backend funcionando</li>
+<li>Google Sheets funcionando</li>
+<li>Logs funcionando</li>
+<li>Compatible con red corporativa</li>
+</ul>
+
+<a class="boton" href="RegLab.html">
+Volver al formulario
+</a>
+
+</div>
+
+</div>
+
+</body>
+</html>
